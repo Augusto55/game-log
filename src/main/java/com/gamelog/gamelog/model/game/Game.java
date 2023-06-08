@@ -1,5 +1,6 @@
 package com.gamelog.gamelog.model.game;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gamelog.gamelog.model.user.User;
 import jakarta.persistence.*;
 
@@ -30,6 +31,7 @@ public class Game {
     @Column(unique = true)
     private Status status;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

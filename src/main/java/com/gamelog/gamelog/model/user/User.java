@@ -1,5 +1,6 @@
 package com.gamelog.gamelog.model.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gamelog.gamelog.model.game.Game;
 import jakarta.persistence.*;
 
@@ -28,6 +29,12 @@ public class User {
         this.games = games;
     }
 
+    public User(UserDto userDto) {
+        this.username = userDto.username();
+        this.id = userDto.id();
+    }
+
+
     public Integer getId() {
         return id;
     }
@@ -50,5 +57,9 @@ public class User {
 
     public void setGames(List<Game> games) {
         this.games = games;
+    }
+
+    public void atualizarInformacoes(UserDto userDto) {
+        this.username = userDto.username();
     }
 }
