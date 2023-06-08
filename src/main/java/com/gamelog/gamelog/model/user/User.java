@@ -15,6 +15,7 @@ public class User {
 
     private String username;
 
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Game> games = new ArrayList<>();
 
