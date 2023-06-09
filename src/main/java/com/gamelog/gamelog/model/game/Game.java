@@ -17,6 +17,7 @@ public class Game {
 
     private String name;
 
+    @Column(name="launchdate")
     private LocalDate launchDate;
 
     private String developer;
@@ -50,6 +51,15 @@ public class Game {
 
     public Game() {
 
+    }
+
+    public Game(GameRegisterDto gameRegisterDto) {
+        this.id = gameRegisterDto.id();
+        this.name = gameRegisterDto.name();
+        this.launchDate = gameRegisterDto.launchDate();
+        this.developer = gameRegisterDto.developer();
+        this.publisher = gameRegisterDto.publisher();
+        this.genres = gameRegisterDto.genres();
     }
 
     public Integer getId() {
@@ -122,5 +132,13 @@ public class Game {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public void atualizarInformacoes(GameRegisterDto gameRegisterDto){
+        this.name = gameRegisterDto.name();
+        this.launchDate = gameRegisterDto.launchDate();
+        this.developer = gameRegisterDto.developer();
+        this.publisher = gameRegisterDto.publisher();
+        this.genres = gameRegisterDto.genres();
     }
 }
