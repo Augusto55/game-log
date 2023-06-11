@@ -55,21 +55,19 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
-    @PostMapping("/{userId}/games")
+
+
+    @PostMapping("/{userId}/addgames/{gameId}")
     @Transactional
-    public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @RequestBody GameDto gameDto) {
-        Game game = new Game();
-        game.setName(gameDto.name());
-        game.setRating(gameDto.rating());
-        game.setStatus(gameDto.status());
+    public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId){
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-        User user = userRepository.getReferenceById(userId);
-
-        game.setUser(user);
-
-        gameRepository.save(game);
-
+        System.out.println(game);
+        user.games.add(game);
         return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
     }
+
+
 
 }

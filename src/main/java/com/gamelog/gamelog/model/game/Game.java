@@ -5,6 +5,8 @@ import com.gamelog.gamelog.model.user.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -32,10 +34,14 @@ public class Game {
     @Column(unique = true)
     private Status status;
 
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "games")
     @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    private List<User> user = new ArrayList<>();
 
     public Game(Integer id, String name, LocalDate launchDate, String developer, String publisher, String genres, Double rating, Status status, User user) {
         this.id = id;
@@ -46,7 +52,6 @@ public class Game {
         this.genres = genres;
         this.rating = rating;
         this.status = status;
-        this.user = user;
     }
 
     public Game() {
@@ -126,13 +131,7 @@ public class Game {
         this.status = status;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public void atualizarInformacoes(GameRegisterDto gameRegisterDto){
         this.name = gameRegisterDto.name();
