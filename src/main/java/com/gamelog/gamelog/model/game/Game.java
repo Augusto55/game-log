@@ -2,6 +2,7 @@ package com.gamelog.gamelog.model.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gamelog.gamelog.model.user.User;
+import com.gamelog.gamelog.model.user.UserAddGameDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -65,6 +66,16 @@ public class Game {
         this.developer = gameRegisterDto.developer();
         this.publisher = gameRegisterDto.publisher();
         this.genres = gameRegisterDto.genres();
+    }
+
+    public Game(UserAddGameDto addgame) {
+        this.rating = addgame.rating();
+        this.status = addgame.status();
+    }
+
+    public void addRatingStatus(UserAddGameDto addGameDto){
+        this.rating = addGameDto.rating();
+        this.status = addGameDto.status();
     }
 
     public Integer getId() {
