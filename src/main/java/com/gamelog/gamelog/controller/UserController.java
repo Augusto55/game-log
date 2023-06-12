@@ -1,9 +1,6 @@
 package com.gamelog.gamelog.controller;
 
-import com.gamelog.gamelog.model.game.Game;
-import com.gamelog.gamelog.model.game.GameDto;
-import com.gamelog.gamelog.model.game.GameRepository;
-import com.gamelog.gamelog.model.game.Status;
+import com.gamelog.gamelog.model.game.*;
 import com.gamelog.gamelog.model.user.User;
 import com.gamelog.gamelog.model.user.UserAddGameDto;
 import com.gamelog.gamelog.model.user.UserDto;
@@ -81,11 +78,12 @@ public class UserController {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-        game.setRating(addGameDto.rating());
-        game.setStatus(addGameDto.status());
+        GameCopy copy = new GameCopy(game);
+
+        copy.setRatingStatus(addGameDto);
 
         // Adiciona o jogo à lista de jogos do usuário
-        user.getGames().add(game);
+        user.getGames().add(copy);
 
         return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
     }

@@ -2,6 +2,7 @@ package com.gamelog.gamelog.model.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gamelog.gamelog.model.game.Game;
+import com.gamelog.gamelog.model.game.GameCopy;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
