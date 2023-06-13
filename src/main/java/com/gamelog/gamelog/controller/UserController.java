@@ -64,42 +64,36 @@ public class UserController {
 
 
 
-//    @PostMapping("/{userId}/addgames/{gameId}")
-//    @Transactional
-//    public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId,
-//                                                @RequestBody UserAddGameDto addGameDto){
-//        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
-//        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
-//
-//        user.games.add(game);
-//        game.addRatingStatus(addGameDto);
-//
-//        return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
-//    }
-//
-//
-
     @PostMapping("/{userId}/addgames/{gameId}")
     @Transactional
     public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId,
-                                                @RequestBody UserAddGameDto addGameDto) throws CloneNotSupportedException {
+                                                @RequestBody UserAddGameDto addGameDto) {
 
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-        Game gameCopy = (Game) game.clone();
 
-        gameCopy.setRating(addGameDto.rating());
-        gameCopy.setStatus(addGameDto.status());
+        Game userGame = new Game();
+        userGame.setName(game.getName());
+        userGame.setLaunchDate(game.getLaunchDate());
+        userGame.setDeveloper(game.getDeveloper());
+        userGame.setPublisher(game.getPublisher());
+        userGame.setGenres(game.getGenres());
+        userGame.setRating(addGameDto.rating());
+        userGame.setStatus(addGameDto.status());
 
-        // Mescla o jogo clonado de volta ao contexto de persistência
-        gameCopy = entityManager.merge(gameCopy);
 
-
-        // Adiciona o jogo à lista de jogos do usuário
-        user.getGames().add(gameCopy);
+        userGame = entityManager.merge(userGame);
+        
+        user.getGames().add(userGame);
 
         return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
     }
 
+
+
+
 }
+
+
+
