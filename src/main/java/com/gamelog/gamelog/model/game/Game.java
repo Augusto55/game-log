@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @Table
-public class Game {
+public class Game implements Cloneable{
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
@@ -35,24 +35,11 @@ public class Game {
     @Column(unique = true)
     private Status status;
 
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            },
-            mappedBy = "games")
-    @JsonIgnore
-    private List<User> user = new ArrayList<>();
 
-    public Game(Integer id, String name, LocalDate launchDate, String developer, String publisher, String genres, Double rating, Status status, User user) {
-        this.id = id;
-        this.name = name;
-        this.launchDate = launchDate;
-        this.developer = developer;
-        this.publisher = publisher;
-        this.genres = genres;
-        this.rating = rating;
-        this.status = status;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public Game() {

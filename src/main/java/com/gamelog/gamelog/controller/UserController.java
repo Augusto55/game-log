@@ -8,7 +8,9 @@ import com.gamelog.gamelog.model.user.User;
 import com.gamelog.gamelog.model.user.UserAddGameDto;
 import com.gamelog.gamelog.model.user.UserDto;
 import com.gamelog.gamelog.model.user.UserRepository;
+import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    private EntityManager entityManager;
 
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
@@ -77,15 +82,22 @@ public class UserController {
     @PostMapping("/{userId}/addgames/{gameId}")
     @Transactional
     public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId,
-                                                @RequestBody UserAddGameDto addGameDto) {
+                                                @RequestBody UserAddGameDto addGameDto) throws CloneNotSupportedException {
+
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-        game.setRating(addGameDto.rating());
-        game.setStatus(addGameDto.status());
+        Game gameCopy = (Game) game.clone();
+
+        gameCopy.setRating(addGameDto.rating());
+        gameCopy.setStatus(addGameDto.status());
+
+        // Mescla o jogo clonado de volta ao contexto de persistência
+        gameCopy = entityManager.merge(gameCopy);
+
 
         // Adiciona o jogo à lista de jogos do usuário
-        user.getGames().add(game);
+        user.getGames().add(gameCopy);
 
         return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
     }
