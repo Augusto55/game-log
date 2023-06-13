@@ -2,17 +2,20 @@ package com.gamelog.gamelog.model.game;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.gamelog.gamelog.model.user.User;
+import com.gamelog.gamelog.model.user.UserAddGameDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
 @Table
-public class Game {
+public class Game implements Cloneable{
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
 
     private String name;
@@ -32,21 +35,11 @@ public class Game {
     @Column(unique = true)
     private Status status;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
-    public Game(Integer id, String name, LocalDate launchDate, String developer, String publisher, String genres, Double rating, Status status, User user) {
-        this.id = id;
-        this.name = name;
-        this.launchDate = launchDate;
-        this.developer = developer;
-        this.publisher = publisher;
-        this.genres = genres;
-        this.rating = rating;
-        this.status = status;
-        this.user = user;
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public Game() {
@@ -60,6 +53,16 @@ public class Game {
         this.developer = gameRegisterDto.developer();
         this.publisher = gameRegisterDto.publisher();
         this.genres = gameRegisterDto.genres();
+    }
+
+    public Game(UserAddGameDto addgame) {
+        this.rating = addgame.rating();
+        this.status = addgame.status();
+    }
+
+    public void addRatingStatus(UserAddGameDto addGameDto){
+        this.rating = addGameDto.rating();
+        this.status = addGameDto.status();
     }
 
     public Integer getId() {
@@ -126,13 +129,7 @@ public class Game {
         this.status = status;
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
 
     public void atualizarInformacoes(GameRegisterDto gameRegisterDto){
         this.name = gameRegisterDto.name();

@@ -1,9 +1,6 @@
 package com.gamelog.gamelog.controller;
 
-import com.gamelog.gamelog.model.game.Game;
-import com.gamelog.gamelog.model.game.GameDto;
-import com.gamelog.gamelog.model.game.GameRegisterDto;
-import com.gamelog.gamelog.model.game.GameRepository;
+import com.gamelog.gamelog.model.game.*;
 import com.gamelog.gamelog.model.user.User;
 import com.gamelog.gamelog.model.user.UserDto;
 import com.gamelog.gamelog.model.user.UserRepository;
@@ -22,6 +19,8 @@ public class GameController {
     @Autowired
     private GameRepository gameRepository;
 
+
+
     
     @GetMapping("")
     public Iterable<Game> listGames(){
@@ -29,9 +28,10 @@ public class GameController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Game> getGameByid(@PathVariable Integer id){
+    public ResponseEntity<GameViewDto> getGameByid(@PathVariable Integer id){
         Game game = gameRepository.findById(id).get();
-        return new ResponseEntity<Game>(game, HttpStatus.OK);
+        GameViewDto gameViewDto = new GameViewDto(game);
+        return new ResponseEntity<GameViewDto>(gameViewDto, HttpStatus.OK);
     }
 
     @PostMapping("/add")
