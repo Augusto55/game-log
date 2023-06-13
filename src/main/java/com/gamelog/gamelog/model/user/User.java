@@ -22,9 +22,6 @@ public class User {
                     CascadeType.PERSIST,
                     CascadeType.MERGE
             })
-    @JoinTable(name = "user_game",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "game_id") })
     public List<Game> games = new ArrayList<>();
 
     public User() {
