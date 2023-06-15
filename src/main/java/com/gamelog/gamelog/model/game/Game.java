@@ -11,11 +11,11 @@ import java.util.List;
 
 
 @Entity
-@Table
+@Table(name = "game")
 public class Game implements Cloneable{
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Integer id;
 
     private String name;
@@ -120,6 +120,7 @@ public class Game implements Cloneable{
     public void setRating(Double rating) {
         this.rating = rating;
     }
+
 
     public Status getStatus() {
         return status;

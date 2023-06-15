@@ -35,6 +35,7 @@ public class UserController {
     @GetMapping("")
     public List<User> listUsers(){
         return userRepository.findAll();
+
     }
 
     @GetMapping("/{id}")
@@ -73,6 +74,12 @@ public class UserController {
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
 
+        for (Game userGame : user.getGames()) {
+            if (userGame.getName().equals(game.getName())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Jogo já existe na lista");
+            }
+        }
+
         Game userGame = new Game();
         userGame.setName(game.getName());
         userGame.setLaunchDate(game.getLaunchDate());
@@ -84,11 +91,34 @@ public class UserController {
 
 
         userGame = entityManager.merge(userGame);
-        
-        user.getGames().add(userGame);
 
+
+        user.getGames().add(userGame);
         return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
+
     }
+
+
+    @DeleteMapping("/{userId}/addgames/{gameId}")
+    @Transactional
+    public ResponseEntity<String> removeGameFromList(@PathVariable Integer userId, @PathVariable Integer gameId,
+                                                @RequestBody UserAddGameDto addGameDto) {
+
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+
+
+        for (Game userGame : user.getGames()) {
+            if (userGame.getName().equals(game.getName())) {
+                user.games.remove(userGame);
+                return ResponseEntity.status(HttpStatus.OK).body("Jogo removido com sucesso");
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Jogo não encontrado na lista.");
+
+    }
+
 
 
 
