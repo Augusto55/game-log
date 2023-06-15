@@ -16,6 +16,7 @@ public class GameViewDto {
     String developer;
     String publisher;
     String genres;
+    Double rating;
 
     public GameViewDto (Game game){
         this.name  = game.getName();
@@ -23,5 +24,6 @@ public class GameViewDto {
         this.developer = game.getDeveloper();
         this.publisher = game.getPublisher();
         this.genres = game.getGenres();
+        this.rating = game.getRating();
     }
 }
