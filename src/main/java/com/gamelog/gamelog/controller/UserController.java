@@ -10,9 +10,11 @@ import com.gamelog.gamelog.model.user.UserDto;
 import com.gamelog.gamelog.model.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,33 +70,36 @@ public class UserController {
     @PostMapping("/{userId}/addgames/{gameId}")
     @Transactional
     public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId,
-                                                @RequestBody UserAddGameDto addGameDto) {
+                                                @Valid @RequestBody UserAddGameDto addGameDto) {
+        try {
+            Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
+            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
-
-        for (Game userGame : user.getGames()) {
-            if (userGame.getName().equals(game.getName())) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Jogo já existe na lista");
+            for (Game userGame : user.getGames()) {
+                if (userGame.getName().equals(game.getName())) {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Jogo já existe na lista");
+                }
             }
+
+            Game userGame = new Game();
+            userGame.setName(game.getName());
+            userGame.setLaunchDate(game.getLaunchDate());
+            userGame.setDeveloper(game.getDeveloper());
+            userGame.setPublisher(game.getPublisher());
+            userGame.setGenres(game.getGenres());
+            userGame.setRating(addGameDto.rating());
+            userGame.setStatus(addGameDto.status());
+
+
+            userGame = entityManager.merge(userGame);
+
+
+            user.getGames().add(userGame);
+            return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
+        } catch (MethodArgumentNotValidException e){
+            return ResponseEntity.ok("cu");
         }
-
-        Game userGame = new Game();
-        userGame.setName(game.getName());
-        userGame.setLaunchDate(game.getLaunchDate());
-        userGame.setDeveloper(game.getDeveloper());
-        userGame.setPublisher(game.getPublisher());
-        userGame.setGenres(game.getGenres());
-        userGame.setRating(addGameDto.rating());
-        userGame.setStatus(addGameDto.status());
-
-
-        userGame = entityManager.merge(userGame);
-
-
-        user.getGames().add(userGame);
-        return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
 
     }
 

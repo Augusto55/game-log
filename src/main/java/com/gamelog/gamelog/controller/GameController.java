@@ -5,6 +5,7 @@ import com.gamelog.gamelog.model.user.User;
 import com.gamelog.gamelog.model.user.UserDto;
 import com.gamelog.gamelog.model.user.UserRepository;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,7 @@ public class GameController {
     public ResponseEntity<GameViewDto> getGameByid(@PathVariable Integer id){
         Game game = gameRepository.findById(id).get();
         GameViewDto gameViewDto = new GameViewDto(game);
+        gameViewDto.setRating(gameRepository.getAverageRating(gameViewDto.getName()));
         return new ResponseEntity<GameViewDto>(gameViewDto, HttpStatus.OK);
     }
 
