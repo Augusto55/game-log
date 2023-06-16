@@ -28,4 +28,6 @@ public class GameViewDto {
         this.genres = game.getGenres();
         this.rating = game.getRating();
     }
+
+
 }

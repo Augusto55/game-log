@@ -70,36 +70,32 @@ public class UserController {
     @PostMapping("/{userId}/addgames/{gameId}")
     @Transactional
     public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId,
-                                                @Valid @RequestBody UserAddGameDto addGameDto) {
-        try {
-            Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
-            User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
+                                                @Valid @RequestBody UserAddGameDto addGameDto) throws MethodArgumentNotValidException {
+        Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
 
-            for (Game userGame : user.getGames()) {
-                if (userGame.getName().equals(game.getName())) {
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Jogo já existe na lista");
-                }
+        for (Game userGame : user.getGames()) {
+            if (userGame.getName().equals(game.getName())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Jogo já existe na lista");
             }
-
-            Game userGame = new Game();
-            userGame.setName(game.getName());
-            userGame.setLaunchDate(game.getLaunchDate());
-            userGame.setDeveloper(game.getDeveloper());
-            userGame.setPublisher(game.getPublisher());
-            userGame.setGenres(game.getGenres());
-            userGame.setRating(addGameDto.rating());
-            userGame.setStatus(addGameDto.status());
-
-
-            userGame = entityManager.merge(userGame);
-
-
-            user.getGames().add(userGame);
-            return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
-        } catch (MethodArgumentNotValidException e){
-            return ResponseEntity.ok("cu");
         }
+
+        Game userGame = new Game();
+        userGame.setName(game.getName());
+        userGame.setLaunchDate(game.getLaunchDate());
+        userGame.setDeveloper(game.getDeveloper());
+        userGame.setPublisher(game.getPublisher());
+        userGame.setGenres(game.getGenres());
+        userGame.setRating(addGameDto.rating());
+        userGame.setStatus(addGameDto.status());
+
+
+        userGame = entityManager.merge(userGame);
+
+
+        user.getGames().add(userGame);
+        return ResponseEntity.ok("Jogo adicionado com sucesso ao usuário.");
 
     }
 
@@ -108,6 +104,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<String> removeGameFromList(@PathVariable Integer userId, @PathVariable Integer gameId,
                                                 @RequestBody UserAddGameDto addGameDto) {
+
 
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));

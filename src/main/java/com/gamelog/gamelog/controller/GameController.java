@@ -24,8 +24,8 @@ public class GameController {
 
     
     @GetMapping("")
-    public Iterable<Game> listGames(){
-        return gameRepository.findAll();
+    public List<GameProjection> listGames(){
+        return gameRepository.getAllGames();
     }
 
     @GetMapping("/{id}")
