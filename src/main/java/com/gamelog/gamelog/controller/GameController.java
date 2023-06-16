@@ -24,7 +24,7 @@ public class GameController {
 
     
     @GetMapping("")
-    public List<GameProjection> listGames(){
+    public List<GameViewDto> listGames(){
         return gameRepository.getAllGames();
     }
 

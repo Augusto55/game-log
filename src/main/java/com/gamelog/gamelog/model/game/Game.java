@@ -55,6 +55,7 @@ public class Game implements Cloneable{
         this.genres = gameRegisterDto.genres();
     }
 
+
     public Game(UserAddGameDto addgame) {
         this.rating = addgame.rating();
         this.status = addgame.status();
