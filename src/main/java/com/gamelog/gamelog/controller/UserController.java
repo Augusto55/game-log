@@ -1,18 +1,18 @@
 package com.gamelog.gamelog.controller;
 
 import com.gamelog.gamelog.model.game.Game;
-import com.gamelog.gamelog.model.game.GameDto;
 import com.gamelog.gamelog.model.game.GameRepository;
-import com.gamelog.gamelog.model.game.Status;
 import com.gamelog.gamelog.model.user.User;
-import com.gamelog.gamelog.model.user.UserAddGameDto;
-import com.gamelog.gamelog.model.user.UserDto;
+import com.gamelog.gamelog.model.user.dto.UserAddGameDto;
+import com.gamelog.gamelog.model.user.dto.UserDto;
 import com.gamelog.gamelog.model.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -68,8 +68,7 @@ public class UserController {
     @PostMapping("/{userId}/addgames/{gameId}")
     @Transactional
     public ResponseEntity<String> addGameToUser(@PathVariable Integer userId, @PathVariable Integer gameId,
-                                                @RequestBody UserAddGameDto addGameDto) {
-
+                                                @Valid @RequestBody UserAddGameDto addGameDto) throws MethodArgumentNotValidException {
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));
 
@@ -103,6 +102,7 @@ public class UserController {
     @Transactional
     public ResponseEntity<String> removeGameFromList(@PathVariable Integer userId, @PathVariable Integer gameId,
                                                 @RequestBody UserAddGameDto addGameDto) {
+
 
         Game game = gameRepository.findById(gameId).orElseThrow(() -> new IllegalArgumentException("Jogo não encontrado."));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado."));

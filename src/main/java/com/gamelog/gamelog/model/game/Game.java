@@ -1,13 +1,10 @@
 package com.gamelog.gamelog.model.game;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.gamelog.gamelog.model.user.User;
-import com.gamelog.gamelog.model.user.UserAddGameDto;
+import com.gamelog.gamelog.model.game.dto.GameRegisterDto;
+import com.gamelog.gamelog.model.user.dto.UserAddGameDto;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Entity
@@ -54,6 +51,7 @@ public class Game implements Cloneable{
         this.publisher = gameRegisterDto.publisher();
         this.genres = gameRegisterDto.genres();
     }
+
 
     public Game(UserAddGameDto addgame) {
         this.rating = addgame.rating();

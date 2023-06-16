@@ -1,9 +1,8 @@
 package com.gamelog.gamelog.controller;
 
 import com.gamelog.gamelog.model.game.*;
-import com.gamelog.gamelog.model.user.User;
-import com.gamelog.gamelog.model.user.UserDto;
-import com.gamelog.gamelog.model.user.UserRepository;
+import com.gamelog.gamelog.model.game.dto.GameRegisterDto;
+import com.gamelog.gamelog.model.game.dto.GameViewDto;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,17 +19,18 @@ public class GameController {
     private GameRepository gameRepository;
 
 
-
-    
     @GetMapping("")
-    public Iterable<Game> listGames(){
-        return gameRepository.findAll();
+    public List<GameViewDto> listGames(){
+        return gameRepository.getAllGames();
     }
+
+
 
     @GetMapping("/{id}")
     public ResponseEntity<GameViewDto> getGameByid(@PathVariable Integer id){
         Game game = gameRepository.findById(id).get();
         GameViewDto gameViewDto = new GameViewDto(game);
+        gameViewDto.setRating(gameRepository.getAverageRating(gameViewDto.getName()));
         return new ResponseEntity<GameViewDto>(gameViewDto, HttpStatus.OK);
     }
 
