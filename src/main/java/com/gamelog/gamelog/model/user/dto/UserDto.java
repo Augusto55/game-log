@@ -1,4 +1,4 @@
-package com.gamelog.gamelog.model.user;
+package com.gamelog.gamelog.model.user.dto;
 
 public record UserDto (
         Integer id,

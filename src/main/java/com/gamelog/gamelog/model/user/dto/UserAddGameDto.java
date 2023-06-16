@@ -1,4 +1,4 @@
-package com.gamelog.gamelog.model.user;
+package com.gamelog.gamelog.model.user.dto;
 
 import com.gamelog.gamelog.model.game.Status;
 import jakarta.validation.constraints.Max;

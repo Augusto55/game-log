@@ -1,5 +1,6 @@
-package com.gamelog.gamelog.model.game;
+package com.gamelog.gamelog.model.game.dto;
 
+import com.gamelog.gamelog.model.game.Game;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
@@ -21,6 +22,7 @@ public class GameViewDto {
     Double rating;
 
     public GameViewDto (Game game){
+        this.id = game.getId();
         this.name  = game.getName();
         this.launchDate = game.getLaunchDate();
         this.developer = game.getDeveloper();

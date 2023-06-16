@@ -1,12 +1,10 @@
 package com.gamelog.gamelog.controller;
 
 import com.gamelog.gamelog.model.game.Game;
-import com.gamelog.gamelog.model.game.GameDto;
 import com.gamelog.gamelog.model.game.GameRepository;
-import com.gamelog.gamelog.model.game.Status;
 import com.gamelog.gamelog.model.user.User;
-import com.gamelog.gamelog.model.user.UserAddGameDto;
-import com.gamelog.gamelog.model.user.UserDto;
+import com.gamelog.gamelog.model.user.dto.UserAddGameDto;
+import com.gamelog.gamelog.model.user.dto.UserDto;
 import com.gamelog.gamelog.model.user.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;

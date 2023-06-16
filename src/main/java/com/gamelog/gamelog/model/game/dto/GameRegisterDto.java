@@ -1,4 +1,4 @@
-package com.gamelog.gamelog.model.game;
+package com.gamelog.gamelog.model.game.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
